@@ -1,0 +1,13 @@
+tr.hide-title > th {
+    display: none;
+}
+.eazyproo-panel table.eazyproo-table {
+    width: 100%;
+    max-width: 700px;
+}
+.eazyproo-panel input[type=text] {
+    width: 100%;
+}
+.ez-theme-settings table.eazyproo-table .options_group .img-wrapper {
+    justify-content: flex-start;
+}
