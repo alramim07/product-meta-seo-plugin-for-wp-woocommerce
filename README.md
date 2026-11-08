@@ -1,57 +1,125 @@
-# Eazyproo Product Meta
+# Eazyproo Product Meta & Specification Engine for WooCommerce
 
-**Contributors:** TIC LTD, Al Ramim  
-**Tags:** woocommerce, product meta, custom tabs, specifications, requirements, software specs  
-**Requires at least:** 6.0  
-**Requires PHP:** 8.0  
-**License:** GPLv2 or later  
-**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
+[![WordPress](https://img.shields.io/badge/WordPress-%3E%3D6.0-21759B?style=for-the-badge&logo=wordpress&logoColor=white)](https://wordpress.org)
+[![WooCommerce](https://img.shields.io/badge/WooCommerce-%3E%3D7.0-96588A?style=for-the-badge&logo=woocommerce&logoColor=white)](https://woocommerce.com)
+[![PHP](https://img.shields.io/badge/PHP-%3E%3D8.0-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net)
+[![Version](https://img.shields.io/badge/Version-1.1.7-brightgreen?style=for-the-badge)]()
+[![License](https://img.shields.io/badge/License-GPL--2.0%2B-blue?style=for-the-badge)]()
 
-Eazyproo Product Meta is a standalone WordPress plugin for WooCommerce that adds rich, customizable meta tabs and product data sections like Overview, System Requirements, Included Apps, and Key Features to your single product pages.
+An extensible **Product Meta Data, Technical Specifications, and SEO Rich-Content Engine** for **WooCommerce**. Engineered to eliminate chaotic plaintext product descriptions by providing structured admin data panels and front-end tabs for software requirements, hardware specifications, included software suites, feature matrix comparisons, delivery notices, and dynamic FAQ accordions.
 
 ---
 
-## 🚀 What is this plugin?
+## 🏛️ System Architecture & Hook Lifecycle
 
-Eazyproo Product Meta was specifically designed to enhance WooCommerce product pages by allowing store administrators to display detailed software/hardware specifications, essential features, and comprehensive overviews in a beautiful, structured format. 
+```mermaid
+flowchart TD
+    subgraph Admin_Layer["🏢 WordPress Admin Experience"]
+        GLOBAL["Global Settings Panel (`WP Admin > Eazyproo`)"]
+        PRODUCT["WooCommerce Product Edit Meta Box"]
+        TABS["Custom Data Panels (9 Specialized Tabs)"]
+    end
 
-Originally built as a custom integration for a specific child theme, it has been fully extracted into a standalone, universal plugin that works seamlessly with any modern WordPress theme.
+    subgraph Core_Engine["⚙️ Plugin Kernel (`eazyproo-product-meta`)"]
+        FILTER["`woocommerce_product_data_tabs` Hook"]
+        SAVE["`woocommerce_process_product_meta` Sanitizer"]
+        RENDER["Front-end Tab Injector (`woocommerce_product_tabs`)"]
+    end
 
-## 💡 Why is it useful?
+    subgraph Storefront["🛍️ Single Product Presentation"]
+        FRONT_TABS["Overview & Highlights Tab"]
+        SPECS["OS & Hardware System Requirements"]
+        APPS["Included Applications & Addons"]
+        FAQ["Product FAQ Accordion"]
+        NOTICE["Instant Delivery Notice"]
+    end
 
-By default, WooCommerce only provides a basic "Description" and "Additional Information" tab to describe products. For digital goods, software licenses, or complex electronics, customers need structured data like exact system requirements, compatible applications, platforms, and standout key features. 
+    GLOBAL --> PRODUCT
+    PRODUCT --> TABS
+    TABS --> FILTER
+    FILTER --> SAVE
+    SAVE --> RENDER
+    RENDER --> Storefront
+```
 
-Eazyproo solves this by providing:
-1. **A Global Settings Dashboard (`WP Admin > Eazyproo`):** Where you can pre-define global data points (e.g., icons, titles, platforms like "Windows", "Adobe", "macOS").
-2. **A Product-Level Selector:** Where shop managers can seamlessly check off which preset specs/apps apply to the specific product they are editing via the WooCommerce product data panel.
-3. **Beautiful Front-End Rendering:** Automatically hooking into the WooCommerce single product layout to inject these specifications so customers see highly organized, easy-to-read panels instead of chaotic text descriptions.
+---
 
-## ⚙️ How it works
+## 🌟 Core Functional Capabilities
 
-1. **Global Database Tables:** The plugin automatically creates dedicated, lightweight database tables (`tic_meta_overview`, `tic_meta_sys_reqs`, `tic_meta_apps`, `tic_key_features`) to store your global definitions efficiently. 
-2. **Admin Configuration:** Under the **Eazyproo** menu in your WordPress dashboard, you can define your universal "Overview" tags, "System Requirements", "Meta Fields", and "Apps" dictionaries. You can upload custom icons or images for each.
-3. **Per-Product Assignment:** When editing a WooCommerce product, custom Eazyproo tabs will appear inside the product data meta box. You can quickly select and apply the global features to the individual product.
-4. **Front-End Hooks:** The plugin uses standard WooCommerce ecosystem hooks (like `woocommerce_product_tabs` and `woocommerce_single_product_summary`) to dynamically render your selected specifications exactly where they belong on the frontend product page.
+### 1. 🗂️ 9 Modular Product Specification Panels
+Injected cleanly into WooCommerce's core `product_data` metabox:
+- **Product Overview:** Highlighted bullet points, warranty details, and quick specs.
+- **System Requirements:** Structured minimum vs. recommended hardware/OS specifications (CPU, RAM, GPU, OS platform compatibility).
+- **Included Applications:** Vector/icon catalog linking bundled software suites (e.g., Office packages, Creative Cloud apps).
+- **Key Features:** Matrix of standout product features with icon associations.
+- **Dynamic Product FAQs:** Product-specific Q&A accordions rendered with structured schema semantics.
+- **Title Tag & SEO Overrides:** Granular control over technical specifications titles.
+- **Instant Delivery Notices:** Digital fulfillment disclaimers (e.g., "Instant Email Delivery within 5 Minutes").
+- **Important Buyer Notices:** Advisory warnings, activation disclaimers, and compatibility notices.
+- **Custom Meta Contents:** Free-form technical attribute pairings.
 
-## ✨ Key Features
+### 2. 🎛️ Two-Tier Administration (Global Presets vs. Product Overrides)
+- **Centralized Presets (`WP Admin > Eazyproo`):** Define standard platforms (Windows, macOS, Android, iOS), hardware architectures, and icons once globally.
+- **One-Click Product Binding:** Shop managers check off pre-configured presets when editing products without retyping technical details repeatedly.
 
-* **Global Preset Management:** Create specs and icons once, use them across hundreds of products instantly.
-* **Overview Section:** Highlight high-level categories, platforms, or versions.
-* **System Requirements Builder:** Detail OS, RAM, Storage, and CPU requirements cleanly.
-* **Included Apps Picker:** Visually show which software programs (with thumbnail icons) are included in a bundle or license.
-* **Key Features List:** Display bulleted standout capabilities accompanied by FontAwesome icons.
-* **Dynamic Payment Icons:** Automatically displays fallback icons for available WooCommerce payment gateways in the secure checkout notice.
-* **Universal Theme Compatibility:** Built with standard WP functions to ensure compatibility across different themes.
+### 3. ⚡ Optimized Asset Delivery
+- Asset scripts and stylesheets (`admin-style.css`, `admin-script.js`) are scoped strictly to `post_type === 'product'`, ensuring zero admin bloat on unrelated screens.
+- Clean front-end CSS respecting active theme typography and responsive breakpoints.
 
-## 🛠️ Installation & Setup
+---
 
-1. Upload the entire `eazyproo-product-meta` folder to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Once activated, navigate to the **Eazyproo** menu item in the left-hand admin sidebar.
-4. Configure your global meta fields, titles, and icons inside the 6 settings tabs (**Eazyproo -> Settings**).
-5. Edit any WooCommerce product, find the new Eazyproo tabs injected into the product data box, and start assigning specs!
+## 🛠️ Technology Stack & Requirements
 
-## 👨‍💻 Developer Information
+| Layer | Specifications |
+|---|---|
+| **Platform** | WordPress 6.0+ (Tested up to 6.7+) |
+| **E-Commerce** | WooCommerce 7.0+ (Compatible with Classic & Block Single Product Templates) |
+| **Language Runtime** | PHP 8.0, 8.1, 8.2, 8.3 |
+| **Dependencies** | jQuery (Admin UI tab switching), Native WordPress Settings API |
+| **License** | GPLv2 or later |
 
-* **Developed by:** Al Ramim ([@lynsromero](https://github.com/lynsromero))
-* **Author Company:** [TIC LTD](https://tic.com.bd/)
+---
+
+## 📂 Codebase Layout
+
+```
+product-meta-seo-plugin-for-wp-woocommerce/
+├── assets/
+│   ├── css/
+│   │   ├── admin-style.css           # Product data tabs styling
+│   │   └── front-style.css           # Front-end tab accordions & responsive grid
+│   └── js/
+│       └── admin-script.js           # Dynamic repeater rows & preset selectors
+├── includes/
+│   ├── custom-meta-fields.php        # Tab registration, rendering & meta sanitization
+│   ├── helper.php                    # Data formatting & front-end template tags
+│   └── settings.php                  # Global admin dashboard & preset manager
+├── eazyproo-product-meta.php         # Plugin bootstrap & asset enqueuing
+└── README.md
+```
+
+---
+
+## ⚙️ Installation & Usage
+
+### 1. Plugin Installation
+1. Package the repository as `product-meta-seo-plugin.zip`.
+2. In your WordPress dashboard, navigate to **Plugins $\rightarrow$ Add New $\rightarrow$ Upload Plugin**.
+3. Upload and click **Activate Plugin**.
+
+### 2. Configure Global Presets
+1. Navigate to **WP Admin $\rightarrow$ Eazyproo Settings**.
+2. Configure your standard platforms, operating systems, and specification templates.
+
+### 3. Apply to Products
+1. Open any WooCommerce product under **Products $\rightarrow$ Edit Product**.
+2. Scroll to the **Product Data** metabox.
+3. Access the newly registered specification tabs (**Overview**, **System Requirements**, **Included Apps**, **FAQs**).
+4. Configure data points and click **Update**.
+
+The specifications will automatically render on the single product page tabs!
+
+---
+
+## 📄 License
+This plugin is licensed under the **GNU General Public License v2.0 or later (GPL-2.0+)**.
